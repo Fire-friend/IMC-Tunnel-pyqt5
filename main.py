@@ -231,13 +231,17 @@ from PyQt5.QtNetwork import QLocalSocket, QLocalServer
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    serverName = 'CarServer'
+
+    serverName = 'IMCServe'
     socket = QLocalSocket()
     socket.connectToServer(serverName)
     if socket.waitForConnected(500):
         QMessageBox().information(None, "提示", "软件已在托盘运行，右键托盘恢复。", QMessageBox.Yes)
         app.quit()
     else:
+        localServer = QLocalServer()
+        localServer.listen(serverName)
+        app.setQuitOnLastWindowClosed(False)
 
         ui = CamShow()
         my_thread = MyThread()
@@ -250,7 +254,6 @@ if __name__ == '__main__':
         ui.txt_passward.textChanged.connect(change_pwd)
         ui.setWindowTitle('IMC Tunnel v1.0beta')
         ui.setWindowIcon(QIcon(os.path.join(root_path, 'icon.ico')))
-        app.setQuitOnLastWindowClosed(False)
 
         def showApp():
             ui.show()  # w.hide() #隐藏
